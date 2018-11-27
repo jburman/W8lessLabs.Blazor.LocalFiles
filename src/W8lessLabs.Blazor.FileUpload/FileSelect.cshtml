@@ -1,0 +1,59 @@
+﻿@using Microsoft.JSInterop;
+@inject System.Net.Http.HttpClient Http
+
+@if (IsMultiple)
+{
+    <input ref="fileSelect" multiple accept="@Accept" type="file" style="display: none" onchange="W8lessLabs.Blazor.FileUpload.filesSelected(this.files)" />
+}
+else
+{
+    <input ref="fileSelect" accept="@Accept" type="file" style="display: none" onchange="W8lessLabs.Blazor.FileUpload.filesSelected(this.files)" />
+}
+
+@functions {
+        ElementRef fileSelect;
+        SelectedFile[] selectedFiles;
+
+    public event FilesSelectedHandler OnFilesSelected;
+
+    [Parameter]
+    string Accept { get; set; } = "*/*";
+
+    [Parameter]
+    bool IsMultiple { get; set; }
+
+    public void Show()
+    {
+        JSRuntime.Current.InvokeAsync<object>("W8lessLabs.Blazor.FileUpload.showFileSelector", fileSelect, new DotNetObjectRef(this));
+    }
+
+    [JSInvokable]
+    public void FilesSelected(SelectedFile[] files)
+    {
+        selectedFiles = files;
+
+        OnFilesSelected?.Invoke(selectedFiles);
+    }
+
+    public IReadOnlyList<SelectedFile> SelectedFiles => selectedFiles;
+
+    public SelectedFileReader GetFileReader(SelectedFile file)
+    {
+        if (file != null)
+        {
+
+            return new SelectedFileReader(Http,
+                file,
+                async (SelectedFile selectedFile) =>
+                {
+                    return await JSRuntime.Current.InvokeAsync<string>("W8lessLabs.Blazor.FileUpload.createFileUrl", selectedFile.Name, fileSelect);
+                },
+                async fileBlobUrl =>
+                {
+                    await JSRuntime.Current.InvokeAsync<object>("W8lessLabs.Blazor.FileUpload.revokeFileUrl", fileBlobUrl);
+                });
+        }
+
+        return null;
+    }
+}

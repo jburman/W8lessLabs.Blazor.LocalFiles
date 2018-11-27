@@ -1,0 +1,44 @@
+﻿@page "/"
+
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<FileSelect ref="fileSelect" IsMultiple="false" Accept="*/*"></FileSelect>
+
+<button onclick="@ShowFiles">test</button>
+
+@functions {
+    FileSelect fileSelect;
+    bool initialized = false;
+
+    void ShowFiles()
+    {
+        if(!initialized)
+        {
+            initialized = true;
+
+            fileSelect.OnFilesSelected += async (selectedFiles) =>
+            {
+                foreach (var file in selectedFiles)
+                {
+                    Console.WriteLine("f => " + file.Name);
+
+                    using(var fileReader = fileSelect.GetFileReader(file))
+                    {
+                        var fileData = await fileReader.GetFileBytesAsync();
+                        Console.WriteLine(fileData.Length);
+                    }
+                }
+            };
+        }
+        fileSelect.Show();
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        await Task.CompletedTask;
+    }
+
+}

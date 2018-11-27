@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "W8lessLabs.Blazor.FileUpload", "W8lessLabs.Blazor.FileUpload\W8lessLabs.Blazor.FileUpload.csproj", "{89D0DB52-702B-442C-A2C6-0AF5E67D73E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "W8lessLabs.Blazor.FileUploadTest", "..\test\W8lessLabs.Blazor.FileUploadTest\W8lessLabs.Blazor.FileUploadTest.csproj", "{7873FA1F-CBF1-4925-95C3-76879EC5AFAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{89D0DB52-702B-442C-A2C6-0AF5E67D73E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89D0DB52-702B-442C-A2C6-0AF5E67D73E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89D0DB52-702B-442C-A2C6-0AF5E67D73E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89D0DB52-702B-442C-A2C6-0AF5E67D73E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7873FA1F-CBF1-4925-95C3-76879EC5AFAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7873FA1F-CBF1-4925-95C3-76879EC5AFAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7873FA1F-CBF1-4925-95C3-76879EC5AFAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7873FA1F-CBF1-4925-95C3-76879EC5AFAF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4031279-637F-423F-8314-A7E06D7AF620}
+	EndGlobalSection
+EndGlobal
