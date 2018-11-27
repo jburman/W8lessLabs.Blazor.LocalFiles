@@ -1,30 +1,27 @@
-if (!window.W8lessLabs) {
-    window.W8lessLabs = {};
+if (!window.blazorLocalFiles) {
+    window.blazorLocalFiles = {};
 }
-if (!window.W8lessLabs.Blazor) {
-    window.W8lessLabs.Blazor = {};
-}
-
-window.W8lessLabs.Blazor.FileUpload = {
+window.blazorLocalFiles = {
     customBlobUrls: { count: 0 },
 
     showFileSelector: function (element, component) {
 
         element.onchange = function () {
             var files = element.files;
-            var i, fileList, file;
+            var i, fileList, file, lastModified;
 
             if (files.length > 0) {
                 fileList = [];
                 for (i = 0; i < files.length; i++) {
                     file = files[i];
+                    lastModified = new Date(file.lastModified);
                     fileList.push({
                         name: file.name,
                         size: file.size,
-                        type: file.type
+                        lastModified: lastModified.toISOString()
                     });
                 }
-                component.invokeMethodAsync('FilesSelected', fileList);
+                component.invokeMethodAsync('FilesSelectedAsync', fileList);
             }
         };
         element.click();
@@ -51,7 +48,7 @@ window.W8lessLabs.Blazor.FileUpload = {
 
     configureBlobFetch: function (customBlobUrl) {
         var f = window.fetch;
-        var customBlobUrls = window.W8lessLabs.Blazor.FileUpload.customBlobUrls;
+        var customBlobUrls = window.blazorLocalFiles.customBlobUrls;
 
         if (!customBlobUrls.hasOwnProperty(customBlobUrl)) {
             customBlobUrls[customBlobUrl] = customBlobUrl;
@@ -75,7 +72,7 @@ window.W8lessLabs.Blazor.FileUpload = {
     },
 
     revertBlobFetch: function (customBlobUrl) {
-        var customBlobUrls = window.W8lessLabs.Blazor.FileUpload.customBlobUrls;
+        var customBlobUrls = window.blazorLocalFiles.customBlobUrls;
         if (customBlobUrls.hasOwnProperty(customBlobUrl)) {
             delete customBlobUrls[customBlobUrl];
             customBlobUrls.count = Math.max(0, customBlobUrls.count - 1);

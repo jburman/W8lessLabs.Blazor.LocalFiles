@@ -1,4 +1,4 @@
-﻿namespace W8lessLabs.Blazor.FileUpload
+﻿namespace Blazor.LocalFiles
 {
     public delegate void FilesSelectedHandler(SelectedFile[] files);
 }

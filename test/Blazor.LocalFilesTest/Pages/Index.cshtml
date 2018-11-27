@@ -1,0 +1,98 @@
+﻿@page "/"
+
+
+<h1>Blazor.LocalFiles Test Page</h1>
+
+<FileSelect ref="fileSelect" IsMultiple="true" Accept="*/*"></FileSelect>
+
+<button onclick="@ShowFiles">Select Files</button>
+
+@if (loadFiles != null)
+{
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>Last Modified</td>
+            <td>Size</td>
+            <td>Is Loaded</td>
+            <td>Loaded Size</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var file in loadFiles)
+        {
+        <tr>
+            <td>@file.SelectedFile.Name</td>
+            <td>@file.SelectedFile.LastModified.ToLocalTime()</td>
+            <td>@file.SelectedFile.Size</td>
+            <td>@file.IsLoaded</td>
+            <td>@file.LoadedSize</td>
+            <td><button onclick="@(async () => await LoadFileAsync(file))">Load File</button></td>
+        </tr>
+        }
+    </tbody>
+</table>
+}
+
+@functions {
+    FileSelect fileSelect;
+    LoadFile[] loadFiles;
+
+    void ShowFiles()
+    {
+        // ##########################
+        // Option #1
+        // Provide callback directly to SelectFiles();
+        fileSelect.SelectFiles(FilesSelectedAsync);
+
+        // ##########################
+        // Option #2
+        // Can listen on event
+        //if(fileSelect == null)
+        //    fileSelect.OnFilesSelected += (selectedFiles) => FilesSelectedAsync(selectedFiles);
+        //fileSelect.SelectFiles();
+
+    }
+
+    Task FilesSelectedAsync(SelectedFile[] selectedFiles)
+    {
+        loadFiles = selectedFiles.Select(file => new LoadFile()
+        {
+            SelectedFile = file,
+            IsLoaded = false,
+            LoadedSize = 0
+        }).ToArray();
+
+        StateHasChanged();
+
+        return Task.CompletedTask;
+    }
+
+    async Task LoadFileAsync(LoadFile file)
+    {
+        using (var fileReader = fileSelect.GetFileReader(file.SelectedFile))
+        {
+
+            // ##########################
+            // Option #1
+            // Get all the bytes at one time
+            //var fileData = await fileReader.GetFileBytesAsync();
+            //file.IsLoaded = true;
+            //file.LoadedSize = fileData.Length;
+
+            // ##########################
+            // Option #2
+            // Get a stream
+            using (var fileStream = await fileReader.GetFileStreamAsync())
+            {
+                var buffer = new System.IO.MemoryStream();
+                await fileStream.CopyToAsync(buffer);
+                file.IsLoaded = true;
+                file.LoadedSize = (int)buffer.Length;
+            }
+        }
+
+        StateHasChanged();
+    }
+}

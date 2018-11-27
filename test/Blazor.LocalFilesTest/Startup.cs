@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Blazor.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace W8lessLabs.Blazor.FileUploadTest
+namespace Blazor.LocalFilesTest
 {
     public class Startup
     {

@@ -1,0 +1,74 @@
+﻿@using Microsoft.JSInterop;
+@inject System.Net.Http.HttpClient Http
+
+@if (IsMultiple)
+{
+    <input ref="fileSelect" multiple accept="@Accept" type="file" style="display: none" />
+}
+else
+{
+    <input ref="fileSelect" accept="@Accept" type="file" style="display: none" />
+}
+
+@functions {
+    ElementRef fileSelect;
+    SelectedFile[] selectedFiles;
+
+    [Parameter]
+    string Accept { get; set; } = "*/*";
+
+    [Parameter]
+    bool IsMultiple { get; set; }
+
+    public IEnumerable<SelectedFile> SelectedFiles => selectedFiles;
+
+    public event FilesSelectedHandler OnFilesSelected;
+
+    private FilesSelectedCallback _callback;
+
+    public void SelectFiles(FilesSelectedCallback callback = null)
+    {
+        _callback = callback;
+        JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.showFileSelector", fileSelect, new DotNetObjectRef(this));
+    }
+
+    [JSInvokable]
+    public async Task FilesSelectedAsync(SelectedFile[] files)
+    {
+        selectedFiles = files;
+
+        if (_callback != null)
+        {
+            try
+            {
+                await _callback(files);
+            }
+            finally
+            {
+                _callback = null;
+            }
+        }
+
+        OnFilesSelected?.Invoke(files);
+    }
+
+    public SelectedFileReader GetFileReader(SelectedFile file)
+    {
+        if (file != null)
+        {
+
+            return new SelectedFileReader(Http,
+                file,
+                async (SelectedFile selectedFile) =>
+                {
+                    return await JSRuntime.Current.InvokeAsync<string>("blazorLocalFiles.createFileUrl", selectedFile.Name, fileSelect);
+                },
+                async fileBlobUrl =>
+                {
+                    await JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.revokeFileUrl", fileBlobUrl);
+                });
+        }
+
+        return null;
+    }
+}

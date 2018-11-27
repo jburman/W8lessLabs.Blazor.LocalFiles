@@ -1,7 +1,7 @@
 ﻿using Microsoft.JSInterop;
 using System;
 
-namespace W8lessLabs.Blazor.FileUpload
+namespace Blazor.LocalFiles
 {
     internal class CustomBlobFetch : IDisposable
     {
@@ -15,7 +15,7 @@ namespace W8lessLabs.Blazor.FileUpload
 
             CustomBlobUrl = blobUrl;
 
-            JSRuntime.Current.InvokeAsync<object>("W8lessLabs.Blazor.FileUpload.configureBlobFetch", CustomBlobUrl);
+            JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.configureBlobFetch", CustomBlobUrl);
         }
 
         public string CustomBlobUrl { get; private set; }
@@ -26,7 +26,7 @@ namespace W8lessLabs.Blazor.FileUpload
             {
                 _disposed = true;
 
-                JSRuntime.Current.InvokeAsync<object>("W8lessLabs.Blazor.FileUpload.revertBlobFetch", CustomBlobUrl);
+                JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.revertBlobFetch", CustomBlobUrl);
             }
         }
     }

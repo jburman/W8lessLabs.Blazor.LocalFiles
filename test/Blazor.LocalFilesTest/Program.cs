@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Blazor.Hosting;
 
-namespace W8lessLabs.Blazor.FileUploadTest
+namespace Blazor.LocalFilesTest
 {
     public class Program
     {
