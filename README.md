@@ -1,16 +1,16 @@
-# Blazor.LocalFiles
+## Blazor LocalFiles Component
 
-Blazor.LocalFiles is a Blazor component that makes it super simple to load local files into your .NET code running on WASM.
-Now there's all kinds of wonderful things you can do with files, like parsing etc. without ever having to send the data to a server first!
+LocalFiles is a Blazor component that makes it super simple to load local files into your .NET code running on WASM.
+Now there are all kind of wonderful things you can do with files, like parsing, scanning, modifying etc. without ever having to send the data to a server first!
 
 ## Getting Started
 
-First, install the Blazor.LocalFiles nuget package.
+First, install the [W8lessLabs.Blazor.LocalFiles nuget package](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles).
 Then, add the following references in your _ViewImports.cshtml
 
 ```
-@using Blazor.LocalFiles
-@addTagHelper *,Blazor.LocalFiles
+@using W8lessLabs.Blazor.LocalFiles
+@addTagHelper *,W8lessLabs.Blazor.LocalFiles
 ```
 Next, in your Blazor .cshtml page or component add the FileSelect component tag.
 
@@ -62,7 +62,7 @@ The file selector above allows multiple files to be selected at once, and filter
 
 - Reference for Accept values: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#attr-accept
 
-For a more detailed example [see the Test project](https://github.com/jburman/Blazor.LocalFiles/tree/master/test/Blazor.LocalFilesTest) in GitHub.
+For a more detailed example [see the Test project](https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/tree/master/test/Blazor.LocalFilesTest) in GitHub.
 
 
 ## Technical Details
@@ -71,5 +71,3 @@ Under the covers, the Blazor.LocalFiles component is using a vanilla file input 
 However, out of the box, the Mono runtime that Blazor WASM runs on does not support blob: URLs ([issue filed](https://github.com/mono/mono/issues/11681).) So, to work around this limitation, a customized blob URL is created that removes the blob: scheme from the beginning of the URL. This allows the URL to pass through Mono's HttpClient implementation. Then a customized Fetch implementation is used that intercept those requests at the browser level and convert them back into standard blob: URLs that are passed into the out of the box Fetch API. 
 
 To reduce any unexpected side effects, the customized Fetch implementation is only used while the Blazor.LocalFile's SelectedFileReader is being utilized. It is reverted to the browser's out of the box implementation as soon as the SelectedFileReader is disposed. Furthermore, any URLs without the customized blob URL format are passed through as normal. The goal is to be as unobtrusive as possible.
-
-
