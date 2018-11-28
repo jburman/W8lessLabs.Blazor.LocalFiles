@@ -14,8 +14,8 @@
     <PackageLicenseUrl>https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType />
     <PackageTags>blazor wasm asp.net component</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
-    <Version>0.5.0.0</Version>
+    <PackageReleaseNotes>Blazor version bump.</PackageReleaseNotes>
+    <Version>0.5.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.6.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.7.0" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
