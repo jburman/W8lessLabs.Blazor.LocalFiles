@@ -1,4 +1,4 @@
-﻿using Blazor.LocalFiles;
+﻿using W8lessLabs.Blazor.LocalFiles;
 
 namespace Blazor.LocalFilesTest
 {

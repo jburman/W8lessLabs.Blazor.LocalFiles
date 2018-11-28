@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Blazor.LocalFiles
+namespace W8lessLabs.Blazor.LocalFiles
 {
     public class FileBlobUrls : IDisposable
     {

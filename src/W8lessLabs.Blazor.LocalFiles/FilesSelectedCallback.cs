@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Blazor.LocalFiles
+namespace W8lessLabs.Blazor.LocalFiles
 {
     public delegate Task FilesSelectedCallback(SelectedFile[] files);
 }

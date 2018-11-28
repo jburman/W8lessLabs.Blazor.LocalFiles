@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.LocalFiles", "Blazor.LocalFiles\Blazor.LocalFiles.csproj", "{89D0DB52-702B-442C-A2C6-0AF5E67D73E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "W8lessLabs.Blazor.LocalFiles", "W8lessLabs.Blazor.LocalFiles\W8lessLabs.Blazor.LocalFiles.csproj", "{89D0DB52-702B-442C-A2C6-0AF5E67D73E4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.LocalFilesTest", "..\test\Blazor.LocalFilesTest\Blazor.LocalFilesTest.csproj", "{261B4BDE-8F28-4B81-8382-0549081B001D}"
 EndProject

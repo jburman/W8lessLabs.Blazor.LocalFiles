@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blazor.LocalFiles
+namespace W8lessLabs.Blazor.LocalFiles
 {
     public class SelectedFile
     {

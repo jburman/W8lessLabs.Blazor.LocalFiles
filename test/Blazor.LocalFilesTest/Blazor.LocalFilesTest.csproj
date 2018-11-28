@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Blazor.LocalFiles\Blazor.LocalFiles.csproj" />
+    <ProjectReference Include="..\..\src\W8lessLabs.Blazor.LocalFiles\W8lessLabs.Blazor.LocalFiles.csproj" />
   </ItemGroup>
 
 </Project>

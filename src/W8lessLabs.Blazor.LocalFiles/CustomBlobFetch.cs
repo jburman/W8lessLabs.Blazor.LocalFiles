@@ -1,7 +1,7 @@
 ﻿using Microsoft.JSInterop;
 using System;
 
-namespace Blazor.LocalFiles
+namespace W8lessLabs.Blazor.LocalFiles
 {
     internal class CustomBlobFetch : IDisposable
     {

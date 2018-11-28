@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Blazor.LocalFiles
+namespace W8lessLabs.Blazor.LocalFiles
 {
     public class SelectedFileReader : IDisposable
     {
