@@ -3,20 +3,27 @@
 
 <h1>Blazor.LocalFiles Test Page</h1>
 
-<FileSelect ref="fileSelect" IsMultiple="true" Accept="*/*"></FileSelect>
+<FileSelect ref="multiFileSelect" IsMultiple="true" Accept="*/*"></FileSelect>
 
-<button onclick="@ShowFiles">Select Files</button>
+<FileSelect ref="imageFileSelect" Accept=".jpg,.jpeg,.png"></FileSelect>
+
+<div class="row">
+    <div class="col-sm-6">
+        <button class="btn btn-primary" onclick="@SelectFiles">Select Files</button>
+        <button class="btn btn-primary" onclick="@SelectImageFile">Select Image</button>
+    </div>
+</div>
 
 @if (loadFiles != null)
 {
 <table class="table table-condensed">
     <thead>
         <tr>
-            <td>Name</td>
-            <td>Last Modified</td>
-            <td>Size</td>
-            <td>Is Loaded</td>
-            <td>Loaded Size</td>
+            <th>Name</th>
+            <th>Last Modified</th>
+            <th>Size</th>
+            <th>Is Loaded</th>
+            <th>Loaded Size</th>
         </tr>
     </thead>
     <tbody>
@@ -28,23 +35,47 @@
             <td>@file.SelectedFile.Size</td>
             <td>@file.IsLoaded</td>
             <td>@file.LoadedSize</td>
-            <td><button onclick="@(async () => await LoadFileAsync(file))">Load File</button></td>
+            <td><button class="btn btn-primary" onclick="@(async () => await LoadFile(file))">Load File</button></td>
         </tr>
         }
     </tbody>
 </table>
 }
 
-@functions {
-    FileSelect fileSelect;
-    LoadFile[] loadFiles;
+@if (imageFileUrl != null)
+{
+<div>
+    <div style="margin: 10px;">
+        <img src="@imageFileUrl" style="width: 400px;" />
+    </div>
+    <div>
+        <h5>Load the image data into .NET</h5>
+        <button class="btn btn-primary" onclick="@LoadImageFile">Load Image</button>
+    </div>
+    <div>
+        Is Loaded: @imageFile.IsLoaded
+    </div>
+    <div>
+        Loaded Size: @imageFile.LoadedSize
+    </div>
+</div>
+}
 
-    void ShowFiles()
+
+@functions {
+    FileSelect multiFileSelect;
+    FileSelect imageFileSelect;
+
+    LoadFile[] loadFiles;
+    LoadFile imageFile;
+    string imageFileUrl;
+
+    void SelectFiles()
     {
         // ##########################
         // Option #1
         // Provide callback directly to SelectFiles();
-        fileSelect.SelectFiles(FilesSelectedAsync);
+        multiFileSelect.SelectFiles(FilesSelected);
 
         // ##########################
         // Option #2
@@ -52,10 +83,14 @@
         //if(fileSelect == null)
         //    fileSelect.OnFilesSelected += (selectedFiles) => FilesSelectedAsync(selectedFiles);
         //fileSelect.SelectFiles();
-
     }
 
-    Task FilesSelectedAsync(SelectedFile[] selectedFiles)
+    void SelectImageFile()
+    {
+        imageFileSelect.SelectFiles(ImageFileSelected);
+    }
+
+    Task FilesSelected(SelectedFile[] selectedFiles)
     {
         loadFiles = selectedFiles.Select(file => new LoadFile()
         {
@@ -69,9 +104,28 @@
         return Task.CompletedTask;
     }
 
-    async Task LoadFileAsync(LoadFile file)
+    // Shows how to use the blob file url directly for rendering.
+    // LoadImageFile() below also loads the image's raw data directly into the .NET runtime.
+    async Task ImageFileSelected(SelectedFile[] selectedFiles)
     {
-        using (var fileReader = fileSelect.GetFileReader(file.SelectedFile))
+        imageFile = new LoadFile() {
+            SelectedFile = selectedFiles.FirstOrDefault(),
+            IsLoaded = false,
+            LoadedSize = 0
+        };
+
+        using (var fileReader = imageFileSelect.GetFileReader(imageFile.SelectedFile))
+        {
+            imageFileUrl = await fileReader.GetFileBlobUrlAsync();
+
+            StateHasChanged();
+
+        } // when the SelectedFileReader is disposed the blob URL is destroyed as well. So, don't dispose before rendering it!
+    }
+
+    async Task LoadFile(LoadFile file)
+    {
+        using (var fileReader = multiFileSelect.GetFileReader(file.SelectedFile))
         {
 
             // ##########################
@@ -91,6 +145,19 @@
                 file.IsLoaded = true;
                 file.LoadedSize = (int)buffer.Length;
             }
+        }
+
+        StateHasChanged();
+    }
+
+    async Task LoadImageFile()
+    {
+
+        using (var fileReader = imageFileSelect.GetFileReader(imageFile.SelectedFile))
+        {
+            var imageData = await fileReader.GetFileBytesAsync();
+            imageFile.IsLoaded = true;
+            imageFile.LoadedSize = imageData.Length;
         }
 
         StateHasChanged();

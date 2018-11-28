@@ -56,17 +56,16 @@ else
     {
         if (file != null)
         {
-
-            return new SelectedFileReader(Http,
-                file,
-                async (SelectedFile selectedFile) =>
+            var fileUrls = new FileBlobUrls(async (string selectedFileName) =>
                 {
-                    return await JSRuntime.Current.InvokeAsync<string>("blazorLocalFiles.createFileUrl", selectedFile.Name, fileSelect);
+                    return await JSRuntime.Current.InvokeAsync<string>("blazorLocalFiles.createFileUrl", selectedFileName, fileSelect);
                 },
                 async fileBlobUrl =>
                 {
                     await JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.revokeFileUrl", fileBlobUrl);
                 });
+
+            return new SelectedFileReader(Http, file, fileUrls);
         }
 
         return null;
