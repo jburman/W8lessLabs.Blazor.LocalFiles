@@ -1,5 +1,5 @@
 ﻿@using Microsoft.JSInterop;
-@inject System.Net.Http.HttpClient Http
+@inject IServiceProvider Services
 
 @if (IsMultiple)
 {
@@ -65,7 +65,9 @@ else
                     await JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.revokeFileUrl", fileBlobUrl);
                 });
 
-            return new SelectedFileReader(Http, file, fileUrls);
+            return new SelectedFileReader((System.Net.Http.HttpClient)Services.GetService(typeof(System.Net.Http.HttpClient)), 
+                file, 
+                fileUrls);
         }
 
         return null;

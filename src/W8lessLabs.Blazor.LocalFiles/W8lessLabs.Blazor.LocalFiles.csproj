@@ -14,8 +14,8 @@
     <PackageLicenseUrl>https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType />
     <PackageTags>blazor wasm asp.net component</PackageTags>
-    <PackageReleaseNotes>Blazor version bump.</PackageReleaseNotes>
-    <Version>0.5.1</Version>
+    <PackageReleaseNotes>Remove top level HttpClient injection.</PackageReleaseNotes>
+    <Version>0.5.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
