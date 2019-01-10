@@ -1,4 +1,4 @@
-## Blazor LocalFiles Component
+## Blazor LocalFiles Component [![NuGet](https://img.shields.io/nuget/v/W8lessLabs.Blazor.LocalFiles.svg)](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles/)
 
 LocalFiles is a Blazor component that makes it super simple to load local files into your .NET code running on WASM.
 Now there are all kind of wonderful things you can do with files, like parsing, scanning, modifying etc. without ever having to send the data to a server first!
