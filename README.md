@@ -24,7 +24,8 @@ The FileSelect component is a non-visual component that will wire up the necessa
 ```
 <button @onclick="@SelectFiles">Select Files</button>
 
-@functions {
+@code 
+{
     // Component reference
     FileSelect fileSelect;
 
