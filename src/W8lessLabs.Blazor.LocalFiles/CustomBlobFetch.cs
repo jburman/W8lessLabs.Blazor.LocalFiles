@@ -6,8 +6,12 @@ namespace W8lessLabs.Blazor.LocalFiles
     internal class CustomBlobFetch : IDisposable
     {
         private bool _disposed;
-        public CustomBlobFetch(string blobUrl)
+        private IJSInProcessRuntime _jsRuntime;
+
+        public CustomBlobFetch(IJSInProcessRuntime jsRuntime, string blobUrl)
         {
+            _jsRuntime = jsRuntime;
+
             // Remove blob: scheme from URL as HttpRequestMessage does not allow it.
             // Append ?wasm_blob target to end of the url so that customized fetch recognizes at as a blob request.
             if (blobUrl.StartsWith("blob:"))
@@ -15,7 +19,7 @@ namespace W8lessLabs.Blazor.LocalFiles
 
             CustomBlobUrl = blobUrl;
 
-            JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.configureBlobFetch", CustomBlobUrl);
+            _jsRuntime.InvokeAsync<object>("blazorLocalFiles.configureBlobFetch", CustomBlobUrl);
         }
 
         public string CustomBlobUrl { get; private set; }
@@ -26,7 +30,7 @@ namespace W8lessLabs.Blazor.LocalFiles
             {
                 _disposed = true;
 
-                JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.revertBlobFetch", CustomBlobUrl);
+                _jsRuntime.InvokeAsync<object>("blazorLocalFiles.revertBlobFetch", CustomBlobUrl);
             }
         }
     }

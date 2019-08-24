@@ -1,6 +1,6 @@
 ﻿using W8lessLabs.Blazor.LocalFiles;
 
-namespace Blazor.LocalFilesTest
+namespace W8lessLabs.Blazor.LocalFilesTest
 {
     public class LoadFile
     {

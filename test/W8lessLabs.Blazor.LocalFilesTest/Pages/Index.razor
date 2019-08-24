@@ -3,62 +3,62 @@
 
 <h1>Blazor.LocalFiles Test Page</h1>
 
-<FileSelect ref="multiFileSelect" IsMultiple="true"></FileSelect>
+<FileSelect @ref="multiFileSelect" @ref:suppressField IsMultiple="true"></FileSelect>
 
-<FileSelect ref="imageFileSelect" Accept=".jpg,.jpeg,.png"></FileSelect>
+<FileSelect @ref="imageFileSelect" @ref:suppressField Accept=".jpg,.jpeg,.png"></FileSelect>
 
 <div class="row">
     <div class="col-sm-6">
-        <button class="btn btn-primary" onclick="@SelectFiles">Select Files</button>
-        <button class="btn btn-primary" onclick="@SelectImageFile">Select Image</button>
+        <button class="btn btn-primary" @onclick="@SelectFiles">Select Files</button>
+        <button class="btn btn-primary" @onclick="@SelectImageFile">Select Image</button>
     </div>
 </div>
 
 @if (loadFiles != null)
 {
-<table class="table table-condensed">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Last Modified</th>
-            <th>Size</th>
-            <th>Is Loaded</th>
-            <th>Loaded Size</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var file in loadFiles)
-        {
-        <tr>
-            <td>@file.SelectedFile.Name</td>
-            <td>@file.SelectedFile.LastModified.ToLocalTime()</td>
-            <td>@file.SelectedFile.Size</td>
-            <td>@file.IsLoaded</td>
-            <td>@file.LoadedSize</td>
-            <td><button class="btn btn-primary" onclick="@(async () => await LoadFile(file))">Load File</button></td>
-        </tr>
-        }
-    </tbody>
-</table>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Last Modified</th>
+                <th>Size</th>
+                <th>Is Loaded</th>
+                <th>Loaded Size</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var file in loadFiles)
+            {
+                <tr>
+                    <td>@file.SelectedFile.Name</td>
+                    <td>@file.SelectedFile.LastModified.ToLocalTime()</td>
+                    <td>@file.SelectedFile.Size</td>
+                    <td>@file.IsLoaded</td>
+                    <td>@file.LoadedSize</td>
+                    <td><button class="btn btn-primary" @onclick="@(async () => await LoadFile(file))">Load File</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 @if (imageFileUrl != null)
 {
-<div>
-    <div style="margin: 10px;">
-        <img src="@imageFileUrl" style="width: 400px;" />
-    </div>
     <div>
-        <h5>Load the image data into .NET</h5>
-        <button class="btn btn-primary" onclick="@LoadImageFile">Load Image</button>
+        <div style="margin: 10px;">
+            <img src="@imageFileUrl" style="width: 400px;" />
+        </div>
+        <div>
+            <h5>Load the image data into .NET</h5>
+            <button class="btn btn-primary" @onclick="@LoadImageFile">Load Image</button>
+        </div>
+        <div>
+            Is Loaded: @imageFile.IsLoaded
+        </div>
+        <div>
+            Loaded Size: @imageFile.LoadedSize
+        </div>
     </div>
-    <div>
-        Is Loaded: @imageFile.IsLoaded
-    </div>
-    <div>
-        Loaded Size: @imageFile.LoadedSize
-    </div>
-</div>
 }
 
 
@@ -108,7 +108,8 @@
     // LoadImageFile() below also loads the image's raw data directly into the .NET runtime.
     async Task ImageFileSelected(SelectedFile[] selectedFiles)
     {
-        imageFile = new LoadFile() {
+        imageFile = new LoadFile()
+        {
             SelectedFile = selectedFiles.FirstOrDefault(),
             IsLoaded = false,
             LoadedSize = 0

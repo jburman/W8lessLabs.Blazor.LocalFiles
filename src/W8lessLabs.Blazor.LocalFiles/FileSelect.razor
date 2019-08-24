@@ -1,24 +1,27 @@
 ﻿@using Microsoft.JSInterop;
 @inject IServiceProvider Services
+@inject IJSRuntime jsRuntime
 
 @if (IsMultiple)
 {
-    <input ref="fileSelect" multiple accept="@Accept" type="file" style="display: none" />
+    <input @ref="fileSelect" @ref:suppressField multiple accept="@Accept" type="file" style="display: none" />
 }
 else
 {
-    <input ref="fileSelect" accept="@Accept" type="file" style="display: none" />
+    <input @ref="fileSelect" @ref:suppressField accept="@Accept" type="file" style="display: none" />
 }
 
-@functions {
-    ElementRef fileSelect;
+@code 
+{
+    ElementReference fileSelect;
+
     SelectedFile[] selectedFiles;
 
     [Parameter]
-    string Accept { get; set; } = "*/*";
+    public string Accept { get; set; } = "*/*";
 
     [Parameter]
-    bool IsMultiple { get; set; }
+    public bool IsMultiple { get; set; }
 
     public IEnumerable<SelectedFile> SelectedFiles => selectedFiles;
 
@@ -29,7 +32,7 @@ else
     public void SelectFiles(FilesSelectedCallback callback = null)
     {
         _callback = callback;
-        JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.showFileSelector", fileSelect, new DotNetObjectRef(this));
+        ((IJSInProcessRuntime)jsRuntime).InvokeAsync<object>("blazorLocalFiles.showFileSelector", fileSelect, DotNetObjectRef.Create(this));
     }
 
     [JSInvokable]
@@ -58,15 +61,16 @@ else
         {
             var fileUrls = new FileBlobUrls(async (string selectedFileName) =>
                 {
-                    return await JSRuntime.Current.InvokeAsync<string>("blazorLocalFiles.createFileUrl", selectedFileName, fileSelect);
+                    return await ((IJSInProcessRuntime)jsRuntime).InvokeAsync<string>("blazorLocalFiles.createFileUrl", selectedFileName, fileSelect);
                 },
                 async fileBlobUrl =>
                 {
-                    await JSRuntime.Current.InvokeAsync<object>("blazorLocalFiles.revokeFileUrl", fileBlobUrl);
+                    await ((IJSInProcessRuntime)jsRuntime).InvokeAsync<object>("blazorLocalFiles.revokeFileUrl", fileBlobUrl);
                 });
 
-            return new SelectedFileReader((System.Net.Http.HttpClient)Services.GetService(typeof(System.Net.Http.HttpClient)), 
-                file, 
+            return new SelectedFileReader((System.Net.Http.HttpClient)Services.GetService(typeof(System.Net.Http.HttpClient)),
+                jsRuntime,
+                file,
                 fileUrls);
         }
 

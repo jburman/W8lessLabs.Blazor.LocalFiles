@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.JSInterop;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,14 +11,17 @@ namespace W8lessLabs.Blazor.LocalFiles
         private HttpClient _http;
         private CustomBlobFetch _customBlobFetch;
         private FileBlobUrls _fileBlobUrls;
+        private IJSInProcessRuntime _jsRuntime;
 
         private bool _disposed;
 
         public SelectedFileReader(HttpClient http,
+            IJSRuntime jsRuntime,
             SelectedFile file, 
             FileBlobUrls fileBlobUrls)
         {
             _http = http ?? throw new ArgumentNullException(nameof(http));
+            _jsRuntime = (IJSInProcessRuntime)jsRuntime ?? throw new ArgumentNullException(nameof(jsRuntime));
             File = file ?? throw new ArgumentNullException(nameof(file));
             _fileBlobUrls = fileBlobUrls ?? throw new ArgumentNullException(nameof(fileBlobUrls));
         }
@@ -51,7 +55,7 @@ namespace W8lessLabs.Blazor.LocalFiles
         private async Task<string> _GetCustomBlobFetchAsync()
         {
             if (_customBlobFetch is null)
-                _customBlobFetch = new CustomBlobFetch(await GetFileBlobUrlAsync());
+                _customBlobFetch = new CustomBlobFetch(_jsRuntime, await GetFileBlobUrlAsync());
             return _customBlobFetch.CustomBlobUrl;
         }
     }

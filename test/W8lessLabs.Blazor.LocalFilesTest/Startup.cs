@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Blazor.Builder;
+using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Blazor.LocalFilesTest
+namespace W8lessLabs.Blazor.LocalFilesTest
 {
     public class Startup
     {
@@ -9,7 +9,7 @@ namespace Blazor.LocalFilesTest
         {
         }
 
-        public void Configure(IBlazorApplicationBuilder app)
+        public void Configure(IComponentsApplicationBuilder app)
         {
             app.AddComponent<App>("app");
         }
