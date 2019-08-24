@@ -6,24 +6,23 @@ Now there are all kind of wonderful things you can do with files, like parsing, 
 ## Getting Started
 
 First, install the [W8lessLabs.Blazor.LocalFiles nuget package](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles).
-Then, add the following references in your _ViewImports.cshtml
+Then, add the following references in your _Imports.razor
 
 ```
 @using W8lessLabs.Blazor.LocalFiles
-@addTagHelper *,W8lessLabs.Blazor.LocalFiles
 ```
 Next, in your Blazor .cshtml page or component add the FileSelect component tag.
 
 
 ```
-<FileSelect ref="fileSelect"></FileSelect>
+<FileSelect @ref="fileSelect" @ref:suppressField></FileSelect>
 ```
 
 The FileSelect component is a non-visual component that will wire up the necessary plumbing to select and open files. Next, wire up some code to trigger and handle the file selections.
 
 
 ```
-<button onclick="@SelectFiles">Select Files</button>
+<button @onclick="@SelectFiles">Select Files</button>
 
 @functions {
     // Component reference
@@ -56,7 +55,7 @@ The FileSelect component is a non-visual component that will wire up the necessa
 Without any additional configuration (as in the example above), you'll get a file picker that allows a single file to be selected with any extension. This behavior can be controlled via the **IsMultiple** and **Accept** properties, respectively.
 
 ```
-<FileSelect ref="imageFileSelect" IsMultiple="true" Accept=".jpg,.png"></FileSelect>
+<FileSelect @ref="imageFileSelect" @ref:suppressField IsMultiple="true" Accept=".jpg,.png"></FileSelect>
 ```
 The file selector above allows multiple files to be selected at once, and filters to .jpg and .png file extensions.
 
