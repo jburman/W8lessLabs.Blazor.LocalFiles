@@ -14,8 +14,8 @@
     <PackageLicenseUrl>https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType />
     <PackageTags>blazor wasm asp.net component</PackageTags>
-    <PackageReleaseNotes>Upgraded to preview8</PackageReleaseNotes>
-    <Version>0.6.0</Version>
+    <PackageReleaseNotes>Remove custom blob URL handling since it's no longer needed.</PackageReleaseNotes>
+    <Version>0.6.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

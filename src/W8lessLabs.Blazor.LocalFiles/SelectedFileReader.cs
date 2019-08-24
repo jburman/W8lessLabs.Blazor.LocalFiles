@@ -9,7 +9,6 @@ namespace W8lessLabs.Blazor.LocalFiles
     public class SelectedFileReader : IDisposable
     {
         private HttpClient _http;
-        private CustomBlobFetch _customBlobFetch;
         private FileBlobUrls _fileBlobUrls;
         private IJSInProcessRuntime _jsRuntime;
 
@@ -32,14 +31,14 @@ namespace W8lessLabs.Blazor.LocalFiles
 
         public async Task<byte[]> GetFileBytesAsync()
         {
-            string customBlobUrl = await _GetCustomBlobFetchAsync();
-            return await _http.GetByteArrayAsync(customBlobUrl);
+            return await _http.GetByteArrayAsync(
+                await GetFileBlobUrlAsync());
         }
 
         public async Task<Stream> GetFileStreamAsync()
         {
-            string customBlobUrl = await _GetCustomBlobFetchAsync();
-            return await _http.GetStreamAsync(customBlobUrl);
+            return await _http.GetStreamAsync(
+                await GetFileBlobUrlAsync());
         }
 
         public void Dispose()
@@ -47,16 +46,9 @@ namespace W8lessLabs.Blazor.LocalFiles
             if (!_disposed)
             {
                 _disposed = true;
-                _customBlobFetch?.Dispose();
+                //_customBlobFetch?.Dispose();
                 _fileBlobUrls?.Dispose();
             }
-        }
-
-        private async Task<string> _GetCustomBlobFetchAsync()
-        {
-            if (_customBlobFetch is null)
-                _customBlobFetch = new CustomBlobFetch(_jsRuntime, await GetFileBlobUrlAsync());
-            return _customBlobFetch.CustomBlobUrl;
         }
     }
 }

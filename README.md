@@ -1,7 +1,7 @@
-## Blazor LocalFiles Component [![NuGet](https://img.shields.io/nuget/v/W8lessLabs.Blazor.LocalFiles.svg)](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles/)
+## LocalFiles Component for Blazor (Wasm only) [![NuGet](https://img.shields.io/nuget/v/W8lessLabs.Blazor.LocalFiles.svg)](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles/)
 
-LocalFiles is a Blazor component that makes it super simple to load local files into your .NET code running on WASM.
-Now there are all kind of wonderful things you can do with files, like parsing, scanning, modifying etc. without ever having to send the data to a server first!
+LocalFiles is a Blazor component that makes it super simple to load local files into your .NET code running on Wasm.
+Unleash your .NET code to do all kinds of wonderful things with files - e.g. parsing, scanning, modifying etc. without ever having to send the data to a server first!
 
 ## Getting Started
 
@@ -66,8 +66,6 @@ For a more detailed example [see the Test project](https://github.com/jburman/W8
 
 
 ## Technical Details
-Under the covers, the Blazor.LocalFiles component is using a vanilla file input element, and it is creating blob: file URLs ([https://www.w3.org/TR/FileAPI/#url](https://www.w3.org/TR/FileAPI/#url).) The contents of the files are then retrieved using the browser's Fetch API and passing in the blob: URLs.
-
-However, out of the box, the Mono runtime that Blazor WASM runs on does not support blob: URLs ([issue filed](https://github.com/mono/mono/issues/11681).) So, to work around this limitation, a customized blob URL is created that removes the blob: scheme from the beginning of the URL. This allows the URL to pass through Mono's HttpClient implementation. Then a customized Fetch implementation is used that intercept those requests at the browser level and convert them back into standard blob: URLs that are passed into the out of the box Fetch API. 
-
-To reduce any unexpected side effects, the customized Fetch implementation is only used while the Blazor.LocalFile's SelectedFileReader is being utilized. It is reverted to the browser's out of the box implementation as soon as the SelectedFileReader is disposed. Furthermore, any URLs without the customized blob URL format are passed through as normal. The goal is to be as unobtrusive as possible.
+Under the covers, the LocalFiles component is using a vanilla file input element and 
+creates blob: file URLs ([https://www.w3.org/TR/FileAPI/#url](https://www.w3.org/TR/FileAPI/#url).) 
+The contents of the files are then retrieved using the browser's Fetch API and passing in the blob: URLs.
