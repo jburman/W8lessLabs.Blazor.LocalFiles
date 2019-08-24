@@ -7,7 +7,7 @@
     <IsPackable>true</IsPackable>
     <LangVersion>7.3</LangVersion>
     <Authors>Jeremy Burman</Authors>
-    <Description>A Blazor component that makes it super simple to load local files into your .NET code running on WASM.</Description>
+    <Description>A component for Blazor Wasm that makes it super simple to load local files into your .NET code.</Description>
     <RepositoryUrl>https://github.com/jburman/W8lessLabs.Blazor.LocalFiles</RepositoryUrl>
     <PackageProjectUrl>https://github.com/jburman/W8lessLabs.Blazor.LocalFiles</PackageProjectUrl>
     <Copyright>Copyright © Jeremy Burman 2019</Copyright>
