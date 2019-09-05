@@ -1,11 +1,10 @@
 ﻿@page "/"
 
-
 <h1>Blazor.LocalFiles Test Page</h1>
 
-<FileSelect @ref="multiFileSelect" @ref:suppressField IsMultiple="true"></FileSelect>
+<FileSelect @ref="multiFileSelect" IsMultiple="true"></FileSelect>
 
-<FileSelect @ref="imageFileSelect" @ref:suppressField Accept=".jpg,.jpeg,.png"></FileSelect>
+<FileSelect @ref="imageFileSelect" Accept=".jpg,.jpeg,.png"></FileSelect>
 
 <div class="row">
     <div class="col-sm-6">

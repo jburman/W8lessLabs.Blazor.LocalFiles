@@ -4,11 +4,11 @@
 
 @if (IsMultiple)
 {
-    <input @ref="fileSelect" @ref:suppressField multiple accept="@Accept" type="file" style="display: none" />
+    <input @ref="fileSelect" multiple accept="@Accept" type="file" style="display: none" />
 }
 else
 {
-    <input @ref="fileSelect" @ref:suppressField accept="@Accept" type="file" style="display: none" />
+    <input @ref="fileSelect" accept="@Accept" type="file" style="display: none" />
 }
 
 @code 
@@ -32,7 +32,7 @@ else
     public void SelectFiles(FilesSelectedCallback callback = null)
     {
         _callback = callback;
-        ((IJSInProcessRuntime)jsRuntime).InvokeAsync<object>("blazorLocalFiles.showFileSelector", fileSelect, DotNetObjectRef.Create(this));
+        ((IJSInProcessRuntime)jsRuntime).InvokeAsync<object>("blazorLocalFiles.showFileSelector", fileSelect, DotNetObjectReference.Create(this));
     }
 
     [JSInvokable]
