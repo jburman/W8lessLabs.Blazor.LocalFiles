@@ -15,7 +15,7 @@ Next, in your Blazor .cshtml page or component add the FileSelect component tag.
 
 
 ```
-<FileSelect @ref="fileSelect" @ref:suppressField></FileSelect>
+<FileSelect @ref="fileSelect"></FileSelect>
 ```
 
 The FileSelect component is a non-visual component that will wire up the necessary plumbing to select and open files. Next, wire up some code to trigger and handle the file selections.
@@ -56,7 +56,7 @@ The FileSelect component is a non-visual component that will wire up the necessa
 Without any additional configuration (as in the example above), you'll get a file picker that allows a single file to be selected with any extension. This behavior can be controlled via the **IsMultiple** and **Accept** properties, respectively.
 
 ```
-<FileSelect @ref="imageFileSelect" @ref:suppressField IsMultiple="true" Accept=".jpg,.png"></FileSelect>
+<FileSelect @ref="imageFileSelect" IsMultiple="true" Accept=".jpg,.png"></FileSelect>
 ```
 The file selector above allows multiple files to be selected at once, and filters to .jpg and .png file extensions.
 
