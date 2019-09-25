@@ -3,6 +3,9 @@
 LocalFiles is a Blazor component that makes it super simple to load local files into your .NET code running on Wasm.
 Unleash your .NET code to do all kinds of wonderful things with files - e.g. parsing, scanning, modifying etc. without ever having to send the data to a server first!
 
+**Note**: This component is currently limited to Wasm use only. For an alternative approach that supports both 
+client side and server side file inputs, see Steve Sanderson's [BlazorInputFile component](http://blog.stevensanderson.com/2019/09/13/blazor-inputfile/).
+
 ## Getting Started
 
 First, install the [W8lessLabs.Blazor.LocalFiles nuget package](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles).
