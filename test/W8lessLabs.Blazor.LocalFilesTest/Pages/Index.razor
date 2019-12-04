@@ -8,8 +8,20 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <button class="btn btn-primary" @onclick="@SelectFiles">Select Files</button>
-        <button class="btn btn-primary" @onclick="@SelectImageFile">Select Image</button>
+        <div>
+            <button class="btn btn-primary" @onclick="@SelectFiles">Select Files</button>
+            <button class="btn btn-primary" @onclick="@SelectImageFile">Select Image</button>
+        </div>
+        @if (errorMessage != null)
+        {
+
+            <div class="alert alert-warning" role="alert">
+                @errorMessage
+                <button type="button" class="close" aria-label="Close" @onclick="@CloseErrorAlert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
     </div>
 </div>
 
@@ -61,16 +73,22 @@
 }
 
 
-@functions {
+@code 
+{
     FileSelect multiFileSelect;
     FileSelect imageFileSelect;
+    SelectedFileReader imageFileReader;
 
     LoadFile[] loadFiles;
     LoadFile imageFile;
     string imageFileUrl;
 
+    string errorMessage;
+
     void SelectFiles()
     {
+        ResetErrorState();
+
         // ##########################
         // Option #1
         // Provide callback directly to SelectFiles();
@@ -86,6 +104,8 @@
 
     void SelectImageFile()
     {
+        ResetErrorState();
+
         imageFileSelect.SelectFiles(ImageFileSelected);
     }
 
@@ -114,36 +134,47 @@
             LoadedSize = 0
         };
 
-        using (var fileReader = imageFileSelect.GetFileReader(imageFile.SelectedFile))
+        // when the SelectedFileReader is disposed the blob URL is destroyed as well. So, don't dispose before rendering it!
+        if(imageFileReader != null)
         {
-            imageFileUrl = await fileReader.GetFileBlobUrlAsync();
+            imageFileReader.Dispose();
+        }
 
-            StateHasChanged();
+        // don't wrap SelectedFileReader in a using here as Chrome will not display the image 
+        // once it's disposed.
+        imageFileReader = imageFileSelect.GetFileReader(imageFile.SelectedFile);
+        imageFileUrl = await imageFileReader.GetFileBlobUrlAsync();
+        StateHasChanged();
 
-        } // when the SelectedFileReader is disposed the blob URL is destroyed as well. So, don't dispose before rendering it!
     }
 
     async Task LoadFile(LoadFile file)
     {
         using (var fileReader = multiFileSelect.GetFileReader(file.SelectedFile))
         {
-
-            // ##########################
-            // Option #1
-            // Get all the bytes at one time
-            //var fileData = await fileReader.GetFileBytesAsync();
-            //file.IsLoaded = true;
-            //file.LoadedSize = fileData.Length;
-
-            // ##########################
-            // Option #2
-            // Get a stream
-            using (var fileStream = await fileReader.GetFileStreamAsync())
+            try
             {
-                var buffer = new System.IO.MemoryStream();
-                await fileStream.CopyToAsync(buffer);
-                file.IsLoaded = true;
-                file.LoadedSize = (int)buffer.Length;
+                // ##########################
+                // Option #1
+                // Get all the bytes at one time
+                //var fileData = await fileReader.GetFileBytesAsync();
+                //file.IsLoaded = true;
+                //file.LoadedSize = fileData.Length;
+
+                // ##########################
+                // Option #2
+                // Get a stream
+                using (var fileStream = await fileReader.GetFileStreamAsync())
+                {
+                    var buffer = new System.IO.MemoryStream();
+                    await fileStream.CopyToAsync(buffer);
+                    file.IsLoaded = true;
+                    file.LoadedSize = (int)buffer.Length;
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
             }
         }
 
@@ -152,14 +183,31 @@
 
     async Task LoadImageFile()
     {
-
-        using (var fileReader = imageFileSelect.GetFileReader(imageFile.SelectedFile))
+        try
         {
-            var imageData = await fileReader.GetFileBytesAsync();
-            imageFile.IsLoaded = true;
-            imageFile.LoadedSize = imageData.Length;
+            using (var fileReader = imageFileSelect.GetFileReader(imageFile.SelectedFile))
+            {
+                var imageData = await fileReader.GetFileBytesAsync();
+                imageFile.IsLoaded = true;
+                imageFile.LoadedSize = imageData.Length;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
         }
 
         StateHasChanged();
+    }
+
+    void CloseErrorAlert()
+    {
+        ResetErrorState();
+        StateHasChanged();
+    }
+
+    void ResetErrorState()
+    {
+        errorMessage = null;
     }
 }

@@ -5,7 +5,8 @@ window.blazorLocalFiles = {
     customBlobUrls: { count: 0 },
 
     showFileSelector: function (element, component) {
-
+        // reset value to work around issue where Chrome will not re-fire onchange events if re-selecting the same file.
+        element.value = "";
         element.onchange = function () {
             var files = element.files;
             var i, fileList, file, lastModified;
@@ -31,11 +32,13 @@ window.blazorLocalFiles = {
         var files = element.files;
         var i, file;
 
-        if (files.length > 0) {
-            for (i = 0; i < files.length; i++) {
-                file = files[i];
-                if (file.name === fileName) {
-                    return window.URL.createObjectURL(file);
+        if (element.value !== "") {
+            if (files.length > 0) {
+                for (i = 0; i < files.length; i++) {
+                    file = files[i];
+                    if (file.name === fileName) {
+                        return window.URL.createObjectURL(file);
+                    }
                 }
             }
         }
