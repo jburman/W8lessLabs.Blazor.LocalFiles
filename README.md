@@ -65,7 +65,7 @@ The file selector above allows multiple files to be selected at once, and filter
 
 - Reference for Accept values: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#attr-accept
 
-For a more detailed example [see the Test project](https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/tree/master/test/Blazor.LocalFilesTest) in GitHub.
+For a more detailed example [see the Test project](https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/tree/master/test/W8lessLabs.Blazor.LocalFilesTest) in GitHub.
 
 
 ## Technical Details
