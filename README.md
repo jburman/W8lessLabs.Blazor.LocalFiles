@@ -8,13 +8,25 @@ client side and server side file inputs, see Steve Sanderson's [BlazorInputFile 
 
 ## Getting Started
 
+(Note: [See the Test project](https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/tree/master/test/W8lessLabs.Blazor.LocalFilesTest) for a working sample.)
+
 First, install the [W8lessLabs.Blazor.LocalFiles nuget package](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles).
-Then, add the following references in your _Imports.razor
+```
+dotnet add package W8lessLabs.Blazor.LocalFiles --version 1.0.0-preview2
+```
+
+Second, add a using reference in your **_Imports.razor**.
 
 ```
 @using W8lessLabs.Blazor.LocalFiles
 ```
-Next, in your Blazor .cshtml page or component add the FileSelect component tag.
+
+Update the **index.html** and add a reference to a .js file included in the W8lessLabs.Blazor.LocalFiles package.
+```
+<script src="_content/W8lessLabs.Blazor.LocalFiles/js/fileupload.js"></script>
+```
+
+Next, in your Blazor .cshtml page or component add the **FileSelect** component tag.
 
 
 ```
