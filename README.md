@@ -1,6 +1,6 @@
-## LocalFiles Component for Blazor (Wasm only) [![NuGet](https://img.shields.io/nuget/v/W8lessLabs.Blazor.LocalFiles.svg)](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles/)
+## Local file support for Blazor (Wasm only) [![NuGet](https://img.shields.io/nuget/v/W8lessLabs.Blazor.LocalFiles.svg)](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles/)
 
-LocalFiles is a Blazor component that makes it super simple to load local files into your .NET code running on Wasm.
+The LocalFiles library contains a Blazor component that makes it super simple to load local files into your .NET code running on Wasm.
 Unleash your .NET code to do all kinds of wonderful things with files - e.g. parsing, scanning, modifying etc. without ever having to send the data to a server first!
 
 **Note**: This component is currently limited to Wasm use only. For an alternative approach that supports both 
@@ -33,7 +33,7 @@ Next, in your Blazor .cshtml page or component add the **FileSelect** component 
 <FileSelect @ref="fileSelect"></FileSelect>
 ```
 
-The FileSelect component is a non-visual component that will wire up the necessary plumbing to select and open files. Next, wire up some code to trigger and handle the file selections.
+The FileSelect component is a non-visual component that will wire up the necessary plumbing to select and open files. Next, bind an event handler to respond to the file selections.
 
 
 ```
