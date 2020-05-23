@@ -1,0 +1,13 @@
+﻿@for (int i = 0; i < selectionCount + 1; i++)
+{
+    if (i == selectionCount)
+    {
+        @* this is the current un-used file selector *@
+        <FileSelect @key="i" @ref="fileSelect" IsMultiple="@IsMultiple" Accept="@Accept" FilesSelected="FilesSelectedHandlerAsync"></FileSelect>
+    }
+    else
+    {
+        @* these are the previously used file selectors *@
+        <FileSelect @key="i" IsMultiple="@IsMultiple" Accept="@Accept"></FileSelect>
+    }
+}

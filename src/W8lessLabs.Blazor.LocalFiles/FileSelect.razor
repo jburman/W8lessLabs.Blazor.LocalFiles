@@ -1,79 +1,8 @@
-﻿@using Microsoft.JSInterop;
-@inject IServiceProvider Services
-@inject IJSRuntime jsRuntime
-
-@if (IsMultiple)
+﻿@if (IsMultiple)
 {
     <input @ref="fileSelect" multiple accept="@Accept" type="file" style="display: none" />
 }
 else
 {
     <input @ref="fileSelect" accept="@Accept" type="file" style="display: none" />
-}
-
-@code 
-{
-    ElementReference fileSelect;
-
-    SelectedFile[] selectedFiles;
-
-    [Parameter]
-    public string Accept { get; set; } = "*/*";
-
-    [Parameter]
-    public bool IsMultiple { get; set; }
-
-    public IEnumerable<SelectedFile> SelectedFiles => selectedFiles;
-
-    public event FilesSelectedHandler OnFilesSelected;
-
-    private FilesSelectedCallback _callback;
-
-    public void SelectFiles(FilesSelectedCallback callback = null)
-    {
-        _callback = callback;
-        ((IJSInProcessRuntime)jsRuntime).InvokeAsync<object>("blazorLocalFiles.showFileSelector", fileSelect, DotNetObjectReference.Create(this));
-    }
-
-    [JSInvokable]
-    public async Task FilesSelectedAsync(SelectedFile[] files)
-    {
-        selectedFiles = files;
-
-        if (_callback != null)
-        {
-            try
-            {
-                await _callback(files);
-            }
-            finally
-            {
-                _callback = null;
-            }
-        }
-
-        OnFilesSelected?.Invoke(files);
-    }
-
-    public SelectedFileReader GetFileReader(SelectedFile file)
-    {
-        if (file != null)
-        {
-            var fileUrls = new FileBlobUrls(async (string selectedFileName) =>
-                {
-                    return await ((IJSInProcessRuntime)jsRuntime).InvokeAsync<string>("blazorLocalFiles.createFileUrl", selectedFileName, fileSelect);
-                },
-                async fileBlobUrl =>
-                {
-                    await ((IJSInProcessRuntime)jsRuntime).InvokeAsync<object>("blazorLocalFiles.revokeFileUrl", fileBlobUrl);
-                });
-
-            return new SelectedFileReader((System.Net.Http.HttpClient)Services.GetService(typeof(System.Net.Http.HttpClient)),
-                jsRuntime,
-                file,
-                fileUrls);
-        }
-
-        return null;
-    }
 }

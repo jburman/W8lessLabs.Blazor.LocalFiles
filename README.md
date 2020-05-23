@@ -8,11 +8,14 @@ client side and server side file inputs, see Steve Sanderson's [BlazorInputFile 
 
 ## Getting Started
 
-(Note: [See the Test project](https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/tree/master/test/W8lessLabs.Blazor.LocalFilesTest) for a working sample.)
+See the [test project](https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/tree/master/test/W8lessLabs.Blazor.LocalFilesTest) for several working examples.
 
 First, install the [W8lessLabs.Blazor.LocalFiles nuget package](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles).
+
+**If you are upgrading from a Preview release,** please see the Change Log below.
+
 ```
-dotnet add package W8lessLabs.Blazor.LocalFiles --version 1.0.0-preview2
+dotnet add package W8lessLabs.Blazor.LocalFiles --version 1.0.0
 ```
 
 Second, add a using reference in your **_Imports.razor**.
@@ -30,40 +33,36 @@ Next, in your Blazor .cshtml page or component add the **FileSelect** component 
 
 
 ```
-<FileSelect @ref="fileSelect"></FileSelect>
+<FileSelect @ref="fileSelect" FilesSelected="FilesSelectedHandler"></FileSelect>
 ```
 
 The FileSelect component is a non-visual component that will wire up the necessary plumbing to select and open files. Next, bind an event handler to respond to the file selections.
 
 
 ```
-<button @onclick="@SelectFiles">Select Files</button>
+@* onclick trigger's the file selectors file picker dialog *@
+<button @onclick="@fileSelect.SelectFiles">Select Files</button>
 
 @code 
 {
     // Component reference
     FileSelect fileSelect;
 
-    // Trigger the browser's file picker and then handle the callback
-    void SelectFiles()
+    // Handle the file selection event
+    async Task FilesSelectedHandler(SelectedFile[] selectedFiles)
     {
-        // Call SelectFiles with a (optional) callback. You can also wire up to a fileSelect.OnFilesSelected event
-        fileSelect.SelectFiles(async (selectedFiles) =>
+        // example of opening a selected file...
+        var selectedFile = selectedFiles[0];
+        using (var fileStream = await fileSelect.OpenFileStreamAsync(selectedFile.Name))
         {
-            SelectedFile file = selectedFiles.First();
-            // file has Name, Size, LastModified
+            // read from file stream here...
+        }
 
-            // Read the file's contents
-            using (var fileReader = fileSelect.GetFileReader(file))
-            {
-                byte[] fileContent = await fileReader.GetFileBytesAsync();
-                // Alternatively - get a stream
-                //Stream fileStream = await fileReader.GetFileStreamAsync();
-
-                // You can also get the blob URL created in the Browser
-                string fileBlobUrl = await fileReader.GetFileBlobUrlAsync();
-            } // When fileReader is Disposed, all of the file blob Urls are also revoked (so use them first!)
-        });
+        // alternatively, load all the bytes at once
+        var fileBytes = await fileSelect.GetFileBytesAsync(selectedFile.Name);
+        
+        // or, get a retrieve the underlying blob url
+        string fileBlobUrl = await fileSelect.GetFileBlobUrlAsync(selectedFile.Name);
     }
 }
 ```
@@ -71,7 +70,7 @@ The FileSelect component is a non-visual component that will wire up the necessa
 Without any additional configuration (as in the example above), you'll get a file picker that allows a single file to be selected with any extension. This behavior can be controlled via the **IsMultiple** and **Accept** properties, respectively.
 
 ```
-<FileSelect @ref="imageFileSelect" IsMultiple="true" Accept=".jpg,.png"></FileSelect>
+<FileSelect @ref="imageFileSelect" IsMultiple="true" Accept=".jpg,.png" FilesSelected="ImagesSelected"></FileSelect>
 ```
 The file selector above allows multiple files to be selected at once, and filters to .jpg and .png file extensions.
 
@@ -79,8 +78,30 @@ The file selector above allows multiple files to be selected at once, and filter
 
 For a more detailed example [see the Test project](https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/tree/master/test/W8lessLabs.Blazor.LocalFilesTest) in GitHub.
 
+## FileSelectList
+New with 1.0.0 release, is a **FileSelectList** component that acts as a re-usable file selector. The regular FileSelect is designed to 
+only remember the last set of files that the user selected. The FileSelectList component provides a similar API surface but acts as 
+container of selected files that is appended to each time SelectFiles is called.
+
+**Note** if the user selects files with the same name, then previous entries are overwritten.
+
+```
+<FileSelectList @ref="fileSelectList" FilesSelected="FilesSelectedHandler"></FileSelectList>
+```
+
+See the [Test Page](https://raw.githubusercontent.com/jburman/W8lessLabs.Blazor.LocalFiles/master/test/W8lessLabs.Blazor.LocalFilesTest/Pages/FileList.razor) for example code for using the FileSelectList.
+
 
 ## Technical Details
 Under the covers, the LocalFiles component is using a vanilla file input element and 
 creates blob: file URLs ([https://www.w3.org/TR/FileAPI/#url](https://www.w3.org/TR/FileAPI/#url).) 
 The contents of the files are then retrieved using the browser's Fetch API and passing in the blob: URLs.
+
+
+## Change Log
+
+### From Preview to v1.0
+- Replaced Event and callback options with more standard EventCallback.
+- Removed SelectedFileReader class as the FileSelect component now automatically handles file element disposal.
+- Moved methods previously available on the SelectedFileReader directly onto the FileSelect component.
+- Added new FileSelectList component that is designed as a re-usable file selector that builds up a list of selected files (and allows removal).
