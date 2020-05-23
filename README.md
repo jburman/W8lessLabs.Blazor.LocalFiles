@@ -40,7 +40,7 @@ The FileSelect component is a non-visual component that will wire up the necessa
 
 
 ```
-@* onclick trigger's the file selectors file picker dialog *@
+@* onclick triggers the file selector's file picker dialog *@
 <button @onclick="@fileSelect.SelectFiles">Select Files</button>
 
 @code 
