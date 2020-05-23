@@ -1,0 +1,109 @@
+﻿@page "/image"
+
+<h1>Blazor.LocalFiles - Load Image</h1>
+
+
+<FileSelect @ref="imageFileSelect" Accept=".jpg,.jpeg,.png" FilesSelected="ImageFileSelectedHandler"></FileSelect>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div>
+            <button class="btn btn-primary" @onclick="@SelectImageFile">Select Image</button>
+        </div>
+        @if (errorMessage != null)
+        {
+
+            <div class="alert alert-warning" role="alert">
+                @errorMessage
+                <button type="button" class="close" aria-label="Close" @onclick="@CloseErrorAlert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@if (imageFileUrl != null)
+{
+    <hr />
+    <div>
+        <div style="margin: 10px;">
+            <img src="@imageFileUrl" style="width: 400px;" />
+        </div>
+        <div>
+            <h5>Load the image data into .NET</h5>
+            <button class="btn btn-primary" @onclick="@LoadSelectedImageFile">Load Image</button>
+        </div>
+        <div>
+            Is Loaded: @imageFile.IsLoaded
+        </div>
+        <div>
+            Loaded Size: @imageFile.LoadedSize
+        </div>
+    </div>
+}
+
+@code
+{
+    FileSelect imageFileSelect;
+
+    LoadFile imageFile;
+    string imageFileUrl;
+
+    string errorMessage;
+
+    void SelectImageFile()
+    {
+        ResetErrorState();
+
+        // Trigger the file selection dialog
+        imageFileSelect.SelectFiles();
+    }
+
+    // Shows how to use the blob file url directly for rendering.
+    // LoadImageFile() below also loads the image's raw data directly into the .NET runtime.
+    async Task ImageFileSelectedHandler(SelectedFile[] selectedFiles)
+    {
+        imageFile = new LoadFile()
+        {
+            SelectedFile = selectedFiles.FirstOrDefault(),
+            IsLoaded = false,
+            LoadedSize = 0
+        };
+
+        try
+        {
+            // load the blob url and dispaly the image
+            imageFileUrl = await imageFileSelect.GetFileBlobUrlAsync(imageFile.SelectedFile.Name);
+            //StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    async Task LoadSelectedImageFile()
+    {
+        try
+        {
+            var imageData = await imageFileSelect.GetFileBytesAsync(imageFile.SelectedFile.Name);
+            imageFile.IsLoaded = true;
+            imageFile.LoadedSize = imageData.Length;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    void CloseErrorAlert()
+    {
+        ResetErrorState();
+    }
+
+    void ResetErrorState()
+    {
+        errorMessage = null;
+    }
+}

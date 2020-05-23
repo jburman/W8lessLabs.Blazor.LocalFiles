@@ -1,8 +1,8 @@
-﻿@page "/"
+﻿@page "/filelist"
 
-<h1>Blazor.LocalFiles - Load File(s)</h1>
+<h1>Blazor.LocalFiles - File Select List</h1>
 
-<FileSelect @ref="multiFileSelect" IsMultiple="true" FilesSelected="FilesSelectedHandler"></FileSelect>
+<FileSelectList @ref="fileSelectList" IsMultiple="true" FilesSelected="FilesSelectedHandler"></FileSelectList>
 
 <div class="row">
     <div class="col-sm-6">
@@ -22,7 +22,7 @@
     </div>
 </div>
 
-@if (loadFiles != null)
+@if (fileSelectList?.HasSelectedFiles == true)
 {
     <hr />
     <table class="table table-condensed table-borderless">
@@ -33,18 +33,23 @@
                 <th>Size</th>
                 <th>Is Loaded</th>
                 <th>Loaded Size</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var file in loadFiles)
+            @foreach (var selectedFile in fileSelectList.SelectedFiles)
             {
+                var fileLoad = loadFiles[selectedFile.Name];
                 <tr>
-                    <td>@file.SelectedFile.Name</td>
-                    <td>@file.SelectedFile.LastModified.ToLocalTime()</td>
-                    <td>@file.SelectedFile.Size</td>
-                    <td>@file.IsLoaded</td>
-                    <td>@file.LoadedSize</td>
-                    <td><button class="btn btn-primary" @onclick="@(async () => await LoadSelectedFile(file))">Load File</button></td>
+                    <td>@selectedFile.Name</td>
+                    <td>@selectedFile.LastModified.ToLocalTime()</td>
+                    <td>@selectedFile.Size</td>
+                    <td>@fileLoad.IsLoaded</td>
+                    <td>@fileLoad.LoadedSize</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="@(async () => await LoadFile(fileLoad))">Load File</button>
+                        <button class="btn btn-outline-danger" @onclick="@(() => RemoveFile(selectedFile.Name))">Remove File</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -53,9 +58,9 @@
 
 @code
 {
-    FileSelect multiFileSelect;
+    FileSelectList fileSelectList;
 
-    LoadFile[] loadFiles;
+    Dictionary<string, LoadFile> loadFiles = new Dictionary<string, LoadFile>(StringComparer.OrdinalIgnoreCase);
 
     string errorMessage;
 
@@ -64,27 +69,31 @@
         ResetErrorState();
 
         // Trigger the file selection dialog
-        multiFileSelect.SelectFiles();
+        fileSelectList.SelectFiles();
     }
 
     Task FilesSelectedHandler(SelectedFile[] selectedFiles)
     {
-        // Store the loaded state about each file (files are lazy loaded into .NET process on demand)
-        loadFiles = selectedFiles.Select(file => new LoadFile()
+        var newSelectedFiles = selectedFiles.Select(file => new LoadFile()
         {
             SelectedFile = file,
             IsLoaded = false,
             LoadedSize = 0
         }).ToArray();
 
+        foreach(var file in newSelectedFiles)
+        {
+            loadFiles[file.SelectedFile.Name] = file;
+        }
+
         return Task.CompletedTask;
     }
 
-    async Task LoadSelectedFile(LoadFile file)
+    async Task LoadFile(LoadFile file)
     {
         try
         {
-            using (var fileStream = await multiFileSelect.OpenFileStreamAsync(file.SelectedFile.Name))
+            using (var fileStream = await fileSelectList.OpenFileStreamAsync(file.SelectedFile.Name))
             {
                 var buffer = new System.IO.MemoryStream();
                 await fileStream.CopyToAsync(buffer);
@@ -92,10 +101,15 @@
                 file.LoadedSize = (int)buffer.Length;
             }
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             errorMessage = ex.Message;
         }
+    }
+
+    void RemoveFile(string fileName)
+    {
+        fileSelectList.RemoveFile(fileName);
     }
 
     void CloseErrorAlert()
