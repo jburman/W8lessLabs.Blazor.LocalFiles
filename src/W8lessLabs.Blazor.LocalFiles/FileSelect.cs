@@ -40,6 +40,13 @@ namespace W8lessLabs.Blazor.LocalFiles
         [Parameter]
         public EventCallback<SelectedFile[]> FilesSelected { get; set; }
 
+        /// <summary>
+        /// Fires when the user finishes selecting one or more files. The FileSelectChangeArgs contains a reference to the FileSelect as well 
+        /// as a list of all of the files currently referenced by the FileSelectList.
+        /// </summary>
+        [Parameter]
+        public EventCallback<FileSelectChangeArgs> FilesChanged { get; set; }
+
         public void SelectFiles()
         {
             ((IJSInProcessRuntime)JsRuntime).InvokeAsync<object>("blazorLocalFiles.showFileSelector", fileSelect, DotNetObjectReference.Create(this));
@@ -57,7 +64,13 @@ namespace W8lessLabs.Blazor.LocalFiles
 
                 selectedFiles = files;
 
-                await FilesSelected.InvokeAsync(files).ConfigureAwait(false);
+                // clone
+                var eventArgFiles = new SelectedFile[files.Length];
+                Array.Copy(files, eventArgFiles, files.Length);
+
+                await FilesSelected.InvokeAsync(eventArgFiles).ConfigureAwait(false);
+
+                await FilesChanged.InvokeAsync(new FileSelectChangeArgs(this, eventArgFiles));
             }
         }
 

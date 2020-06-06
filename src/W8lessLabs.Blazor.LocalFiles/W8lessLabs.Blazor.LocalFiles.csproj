@@ -14,10 +14,8 @@
     <PackageLicenseUrl>https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType />
     <PackageTags>blazor wasm asp.net component</PackageTags>
-    <PackageReleaseNotes>Upgrade to Blazor Wasm Release version 3.2.0.
-Cleanup API and removed file reader class (see README on Github repo for breaking change details!).
-Added new FileSelectList component to make managing lists of selected files easier.</PackageReleaseNotes>
-    <Version>1.0.0</Version>
+    <PackageReleaseNotes>Added new FileSelect.FilesChanged and FileSelectList.FileListChanged event callbacks with an args object that provides a reference to both the FileSelect control and the list of selected files.</PackageReleaseNotes>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

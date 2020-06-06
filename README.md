@@ -8,7 +8,8 @@ client side and server side file inputs, see Steve Sanderson's [BlazorInputFile 
 
 ## Getting Started
 
-See the [test project](https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/tree/master/test/W8lessLabs.Blazor.LocalFilesTest) for several working examples.
+See the [test project](https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/tree/master/test/W8lessLabs.Blazor.LocalFilesTest) for several working examples with code. 
+There is now also a [live demo site](https://jburman.github.io/BlazorLocalFilesExample/) on Github Pages.
 
 First, install the [W8lessLabs.Blazor.LocalFiles nuget package](https://www.nuget.org/packages/W8lessLabs.Blazor.LocalFiles).
 
@@ -99,6 +100,28 @@ The contents of the files are then retrieved using the browser's Fetch API and p
 
 
 ## Change Log
+
+### From v1.0.0 to v1.0.1
+- Added new FileSelect.FilesChanged and FileSelectList.FileListChanged event callbacks
+- The new events provide an args object with a reference to the FileSelect (or FileSelectList), 
+which removes the need to add an @ref and store a separate reference.
+
+**Example of new Event Callback**
+```
+<FileSelect FilesChanged="FilesChangedHandler" />
+
+@code
+{
+    async Task FilesChangedHandler(FileSelectChangeArgs args)
+    {
+        var file = args.Files.First();
+        using (var fileStream = await args.FileSelect.OpenFileStreamAsync(file.Name))
+        {
+            // do something with file contents ...
+        }
+    }
+}
+```
 
 ### From Preview to v1.0
 - Replaced Event and callback options with more standard EventCallback.

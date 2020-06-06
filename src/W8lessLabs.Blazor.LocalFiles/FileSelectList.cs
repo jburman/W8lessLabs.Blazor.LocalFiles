@@ -27,8 +27,19 @@ namespace W8lessLabs.Blazor.LocalFiles
 
         public IEnumerable<SelectedFile> SelectedFiles => fileSelectors.Select(fs => fs.Value.file).ToArray();
 
+        /// <summary>
+        /// Fires when the user finishes selecting one or more files. The SelectedFile[] argument represents the most recent selected files, and 
+        /// it does not include previously selected files. (in contrast to the FileListChanged event, which does return the complete set of all selected files.)
+        /// </summary>
         [Parameter]
         public EventCallback<SelectedFile[]> FilesSelected { get; set; }
+
+        /// <summary>
+        /// Fires when the user finishes selecting one or more files. The FileSelectListChangeArgs contains a reference to the FileSelectList as well 
+        /// as a list of all of the files currently referenced by the FileSelectList.
+        /// </summary>
+        [Parameter]
+        public EventCallback<FileSelectListChangeArgs> FileListChanged { get; set; }
 
         public void SelectFiles()
         {
@@ -44,6 +55,8 @@ namespace W8lessLabs.Blazor.LocalFiles
                 disposeList.AddLast(fileSelect);
 
                 await FilesSelected.InvokeAsync(files).ConfigureAwait(false);
+
+                await FileListChanged.InvokeAsync(new FileSelectListChangeArgs(this, (SelectedFile[])SelectedFiles));
             }
 
             selectionCount++;
