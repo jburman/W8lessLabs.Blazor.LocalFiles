@@ -103,15 +103,19 @@ The contents of the files are then retrieved using the browser's Fetch API and p
 
 ### From v1.0.0 to v1.0.1
 - Added new FileSelect.FilesChanged and FileSelectList.FileListChanged event callbacks
-- The new events provide an args object with a reference to the FileSelect (or FileSelectList), 
-which removes the need to add an @ref and store a separate reference.
+- The new events provide an args object with a reference to the FileSelect (or FileSelectList) as well as to
+the list of selected files.
 
 **Example of new Event Callback**
 ```
-<FileSelect FilesChanged="FilesChangedHandler" />
+<FileSelect @ref="fileSelect" FilesChanged="FilesChangedHandler" />
+
+<button @onclick="@(() => fileSelect.SelectFiles())">Select Files</button>
 
 @code
 {
+    FileSelect fileSelect;
+
     async Task FilesChangedHandler(FileSelectChangeArgs args)
     {
         var file = args.Files.First();
