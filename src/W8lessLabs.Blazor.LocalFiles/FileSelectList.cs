@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace W8lessLabs.Blazor.LocalFiles
 {
-    public partial class FileSelectList : IDisposable
+    public partial class FileSelectList : IAsyncDisposable
     {
         [Parameter]
         public string Accept { get; set; } = FileSelect.DefaultAccept;
@@ -96,24 +96,19 @@ namespace W8lessLabs.Blazor.LocalFiles
         }
 
         private bool disposed;
-        protected virtual void Dispose(bool disposing)
+
+        public virtual async ValueTask DisposeAsync()
         {
-            if (disposing && !disposed)
+            if (!disposed)
             {
                 disposed = true;
 
-                // TODO switch to async dispose once supported in Blazor
                 foreach (var fileSelect in disposeList)
-                    fileSelect.Dispose();
+                    await fileSelect.DisposeAsync().ConfigureAwait(false);
 
                 disposeList.Clear();
                 fileSelectors.Clear();
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

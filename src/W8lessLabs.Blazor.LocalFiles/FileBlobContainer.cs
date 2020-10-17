@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace W8lessLabs.Blazor.LocalFiles
 {
-    public class FileBlobContainer : IDisposable
+    public class FileBlobContainer : IAsyncDisposable
     {
         private bool _disposed;
         private Dictionary<string, (bool revoked, string fileBlobUrl)> _fileUrls;
@@ -78,41 +78,16 @@ namespace W8lessLabs.Blazor.LocalFiles
             }
         }
 
-
-        // TODO remove once async Dispose is usable
-        void RevokeFileBlobUrlSynchronous(string fileBlobUrl) =>
-            ((IJSInProcessRuntime)_jsRuntime).Invoke<object>("blazorLocalFiles.revokeFileUrl", fileBlobUrl);
-
-        protected virtual void Dispose(bool disposing)
+        public virtual async ValueTask DisposeAsync()
         {
-            if (!_disposed && disposing)
+            if (!_disposed)
             {
                 _disposed = true;
 
-                // TODO make async once Blazor supports it and use RevokeAll method...
-                //await _RevokeAll();
-                
-                foreach (var file in _fileUrls)
-                {
-                    string fileName = file.Key;
-                    (bool revoked, string fileBlobUrl) url = file.Value;
-                    if (!url.revoked)
-                    {
-                        try
-                        {
-                            RevokeFileBlobUrlSynchronous(url.fileBlobUrl);
-                        }
-                        catch (Exception ex) { Console.WriteLine("Exception revoking File Blob Url " + url.fileBlobUrl + " Error: " + ex.Message); }
-                    }
-                }
+                await _RevokeAll().ConfigureAwait(false);
 
                 _fileUrls = null;
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

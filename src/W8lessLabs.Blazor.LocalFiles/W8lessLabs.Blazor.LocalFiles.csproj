@@ -1,26 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RazorLangVersion>3.0</RazorLangVersion>
-    <OutputType>Library</OutputType>
-    <IsPackable>true</IsPackable>
-    <LangVersion>8.0</LangVersion>
+    <TargetFramework>net5.0</TargetFramework>
     <Authors>Jeremy Burman</Authors>
-    <Description>A component for Blazor Wasm that makes it super simple to load local files into your .NET code.</Description>
+    <Description>A component for Blazor Wasm that makes it super simple to load local files into your .NET code. Efficiently transfer file blobs from the browser into the .NET runtime.</Description>
     <RepositoryUrl>https://github.com/jburman/W8lessLabs.Blazor.LocalFiles</RepositoryUrl>
     <PackageProjectUrl>https://github.com/jburman/W8lessLabs.Blazor.LocalFiles</PackageProjectUrl>
     <Copyright>Copyright © Jeremy Burman 2020</Copyright>
     <PackageLicenseUrl>https://github.com/jburman/W8lessLabs.Blazor.LocalFiles/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType />
     <PackageTags>blazor wasm asp.net component</PackageTags>
-    <PackageReleaseNotes>Added new FileSelect.FilesChanged and FileSelectList.FileListChanged event callbacks with an args object that provides a reference to both the FileSelect control and the list of selected files.</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+    <PackageReleaseNotes>.NET 5.0 RC2 support</PackageReleaseNotes>
+    <Version>2.0.0-preview.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0-rc.2.20475.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0-rc.2.20475.17" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0-rc.2.20475.5" />
   </ItemGroup>
 
   <ItemGroup>

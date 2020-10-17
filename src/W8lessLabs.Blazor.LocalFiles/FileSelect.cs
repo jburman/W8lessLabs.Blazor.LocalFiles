@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace W8lessLabs.Blazor.LocalFiles
 {
-    public partial class FileSelect : IDisposable
+    public partial class FileSelect : IAsyncDisposable
     {
         public const string DefaultAccept = "*/*";
 
@@ -113,23 +113,16 @@ namespace W8lessLabs.Blazor.LocalFiles
         }
 
         private bool disposed;
-        protected virtual void Dispose(bool disposing)
+        public virtual ValueTask DisposeAsync()
         {
-            if(disposing && !disposed)
+            if(!disposed)
             {
                 disposed = true;
 
-                // TODO switch to async dispose once supported in Blazor
-                if(blobContainer != null)
-                {
-                    blobContainer.Dispose();
-                }
+                if (blobContainer != null)
+                    return blobContainer.DisposeAsync();
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
+            return ValueTask.CompletedTask;
         }
     }
 }
