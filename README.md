@@ -16,7 +16,7 @@ First, install the [W8lessLabs.Blazor.LocalFiles nuget package](https://www.nuge
 **If you are upgrading from a Preview release,** please see the Change Log below.
 
 ```
-dotnet add package W8lessLabs.Blazor.LocalFiles --version 1.0.0
+dotnet add package W8lessLabs.Blazor.LocalFiles --version 2.0.0
 ```
 
 Second, add a using reference in your **_Imports.razor**.
@@ -100,6 +100,10 @@ The contents of the files are then retrieved using the browser's Fetch API and p
 
 
 ## Change Log
+
+### From v1.0.1 to v2.0.0
+- Update to .NET 5.0. 
+- No functionality changes but a few internal improvements. Takes advantage of Blazor's new async dispose for example.
 
 ### From v1.0.0 to v1.0.1
 - Added new FileSelect.FilesChanged and FileSelectList.FileListChanged event callbacks
