@@ -42,12 +42,15 @@ The FileSelect component is a non-visual component that will wire up the necessa
 
 ```
 @* onclick triggers the file selector's file picker dialog *@
-<button @onclick="@fileSelect.SelectFiles">Select Files</button>
+<button @onclick="SelectFiles">Select Files</button>
 
 @code 
 {
     // Component reference
     FileSelect fileSelect;
+    
+    void SelectFiles() =>
+        fileSelect.SelectFiles();
 
     // Handle the file selection event
     async Task FilesSelectedHandler(SelectedFile[] selectedFiles)
